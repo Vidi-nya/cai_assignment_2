@@ -3,7 +3,7 @@ import random
 import time
 from rag import FinancialChatbot
 
-chatbot = FinancialChatbot(data_path="C:\\Users\\Dell\\Downloads\\CAI_RAG\\DATA\\Nestle_Financtial_report_till2023.xlsx")
+chatbot = FinancialChatbot(data_path="Nestle_Financtial_report_till2023.xlsx")
 
 def fetch_answer_from_backend(query):
     """Calls the backend function to get an answer."""
