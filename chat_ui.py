@@ -1,20 +1,14 @@
 import streamlit as st
 import random
 import time
+from rag import FinancialChatbot
 
-# Dummy API Call
-def dummy_api_call(query):
-    """Simulates an API call and returns a dummy answer with a confidence score."""
-    time.sleep(2.5)  # Simulate processing delay
-    dummy_answers = [
-        "The company's revenue increased by 20% last year.",
-        "The net profit margin showed a decline due to rising expenses.",
-        "The balance sheet indicates strong liquidity ratios.",
-        "The company's debt-to-equity ratio improved significantly."
-    ]
-    answer = random.choice(dummy_answers)
-    confidence = round(random.uniform(0.6, 0.95), 2)
-    return answer, confidence
+chatbot = FinancialChatbot(data_path="C:\\Users\\Dell\\Downloads\\CAI_RAG\\DATA\\Nestle_Financtial_report_till2023.xlsx")
+
+def fetch_answer_from_backend(query):
+    """Calls the backend function to get an answer."""
+    return chatbot.get_answer(query)  # Returns the answer and confidence
+
 
 # Initialize Session State for Chat History
 if "chat_history" not in st.session_state:
@@ -25,6 +19,43 @@ if "loading" not in st.session_state:
 
 # Layout and Title
 st.title("Financial RAG Chat Assistant")
+
+
+# st.markdown(
+#     """
+#     <style>
+#     body, .stApp {
+#         background: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQlSQ-kkQFs_BAOhel_cd_CkFoHN1V-5bUO7vv8NwRp0cjftW6Wm2utQSE&s=10');
+#         background-size: cover;
+#         # background-attachment: fixed;
+#         # background-position: center;
+#         # background-repeat: no-repeat;
+#     }
+#     # .stApp {
+#     #     background: transparent;
+#     # }
+#     # .stTextInput, .stTextArea, .stButton {
+#     #     background-color: rgba(0, 0, 0, 0.5);
+#     #     border-radius: 10px;
+#     #     color: #ffffff;
+#     # }
+#     # .stTextInput > div > input {
+#     #     color: #ffffff;
+#     # }
+#     # .stButton button {
+#     #     color: #ffffff;
+#     #     background-color: #4CAF50;
+#     #     border: none;
+#     #     border-radius: 10px;
+#     # }
+#     </style>
+#     """,
+#     unsafe_allow_html=True
+# )
+
+
+
+
 
 # Display Chat History
 for chat in st.session_state.chat_history:
@@ -87,8 +118,8 @@ if st.session_state.loading:
         # Get the last question
         last_question = st.session_state.chat_history[-1]["question"]
 
-        # Dummy API Call
-        answer, confidence = dummy_api_call(last_question)
+        # API Call
+        answer, confidence = fetch_answer_from_backend(last_question)
 
         # Update the last chat history item with the answer and confidence
         st.session_state.chat_history[-1]["answer"] = answer
